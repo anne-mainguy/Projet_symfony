@@ -1,0 +1,103 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %} Membres{% endblock %}
+
+{% block body %}
+    <h1>Tous les membres</h1>
+
+    <div>
+        <table class="table table-hover" data-tri="{{ tri }}">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        {#<a href="{{ path('admin_user_index', {'tri' : 'id', 'order' : '2'}) }}">
+                            Id
+                            <i class="fas fa-sort"></i>
+                        </a>#}
+                        <a class="arrow-up {{ (order == 1) ? 'text-muted'}}" href=""><i class="fas fa-arrow-up"></i></a>
+                        <a class="arrow-down {{ (order == 2) ? 'text-muted'}}" href=""><i class="fas fa-arrow-down"></i></a>
+                    </th>
+                    <th scopr="col">
+                        Avatar
+                    </th>
+                    <th scope="col">
+                        <a id="pseudo" href="{{ path('admin_user_index', {'tri' : 'pseudo', 'order' : '1'}) }}">
+                            Pseudo
+                        </a>
+                    </th>
+                    <th scope="col">
+                        Email
+                    </th>
+                    <th scope="col">
+                        <a id="createdAt" href="{{ path('admin_user_index', {'tri' : 'createdAt', 'order' : '2'}) }}">
+                            Création
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a id="ads" href="{{ path('admin_user_index', {'tri' : 'ads', 'order' : '2'}) }}">
+                            Posts
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a id="comments" href="{{ path('admin_user_index', {'tri' : 'comments', 'order' : '2'}) }}">
+                            Commentaires
+                        </a>
+                    </th>
+                    <th scope="col">
+                        <a id="reports" href="{{ path('admin_user_index', {'tri' : 'reports', 'order' : '2'}) }}">
+                            Signalements
+                        </a>
+                    </th>
+                    <th scope="col">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td scope="row">
+                        {{ user.id }}
+                    </td>
+                    <td>
+                        <img src="{{ user.avatar }}" class="avatar avatar-mini" alt="">
+                    </td>
+                    <td>
+                        {{ user.pseudo }}
+                    </td>
+                    <td>
+                        {{ user.email }}
+                    </td>
+                    <td>
+                        {{ user.createdAt | date("d/m/Y") }}
+                    </td>
+                    <td>
+                        {{ user.countAd }}<br>
+                        <small>( dont {{ user.countAdsReported }} sidnalés )</small>
+                    </td>
+                    <td>
+                        {{ user.countComments }}<br>
+                        <small>( dont {{ user.countCommentsReported }} sidnalés )</small>
+                    </td>
+                    <td>
+                        {{ user.countReports }}
+                    </td>
+                    <td>
+                        <a target="_blank" href="{{ path("user_show", {"pseudo": user.pseudo}) }}" title="Voir"><i class="fas fa-eye fa-lg"></i></a>
+                        <a href="{{ path("admin_user_delete", {'id' : user.id , 'tri' : tri, 'order' : order}) }}" class="btn text-danger" title="Supprimer"><i class="fas fa-trash-alt fa-lg"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="/js/order.js"></script>
+<script src="/js/tri.js"></script>
+<script>
+    nav("{{ nav }}");
+</script>
+    
+{% endblock %}

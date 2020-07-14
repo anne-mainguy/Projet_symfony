@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% form_theme formInsc 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+<h1>inscription</h1>
+{{ form_start(formInsc) }}
+{{ form_widget(formInsc) }}
+<button type="submit" class="btn btn-primary">Valider</button>
+{{ form_end(formInsc) }}
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $('.custom-file-label').attr('data-browse', 'Parcourir...');
+
+    //pour que le lien vers le fichier s'affiche quand il est sélectionné
+    $('#registration_avatarFile').on('change',function(){
+        var fileName = $(this).val();
+        $(this).next('.custom-file-label').html(fileName);
+    })
+
+</script>
+
+{% endblock %}

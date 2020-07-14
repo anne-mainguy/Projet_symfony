@@ -1,0 +1,132 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Tableau de bors{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <h1>Dashboard</h1>
+
+
+    <section>
+        <h2>Informations général</h2>
+        <div class="row flex-column flex-md-row">
+            <div class="col col-md-6">
+                <div class="card bg-primary text-white mb-3 text-center js-link" data-target="{{ path('admin_user_index', {'tri' : 'id'}) }}">
+                    <div class="row card-body d-flex justify-content-center">
+                        <div class="col-8 row d-flex align-items-center justify-content-center">
+                            <div class="col-12 col-lg-3">
+                                <i class="fa fa-users fa-3x" aria-hidden="true"></i>
+                            </div>
+                            <div class="col-12 col-lg-9">
+                                <h4 class="card-title mb-0">{{ membres }} membres</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-md-6">
+                <div class="card bg-dark text-white mb-3 text-center js-link" data-target="{{ path('admin_ads_index', {'tri' : 'id'}) }}">
+                    <div class="row card-body d-flex justify-content-center">
+                        <div class="col-8 row d-flex align-items-center justify-content-center">
+                            <div class="col-12 col-lg-3">
+                                <i class="fas fa-image fa-3x"></i>
+                            </div>
+                            <div class="col-12 col-lg-9">
+                                <h4 class="card-title mb-0">{{ posts }} posts</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-md-6">
+                <div class="card bg-info text-white mb-3 text-center js-link" data-target="{{ path('admin_comment_index', {'tri' : 'id'}) }}">
+                    <div class="row card-body d-flex justify-content-center">
+                        <div class="col-8 row d-flex align-items-center justify-content-center">
+                            <div class="col-12 col-lg-3">
+                                <i class="fas fa-comment-alt fa-3x"></i>
+                            </div>
+                            <div class="col-12 col-lg-9">
+                                <h4 class="card-title mb-0">{{ comments | length }} commentaires</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Les posts les plus likés</h2>
+        <div class="row row-cols-1 row-cols-md-3">
+            {% for post in bestPosts %}
+            <div class="col-6 col-md mb-4">
+                <div class="card h-100 ">
+                    <a target="_blank" href="{{ path('show_ad', {'id' : post.id}) }}">
+                        <img src="{{ post.image }}" class="card-img-top bestPostsLiked" alt="...">
+                    </a>
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <a target="_blank" href="{{ path('user_show', {'pseudo' : post.author.pseudo}) }}">
+                                <img src="{{post.author.avatar}}" class="avatar avatar-mini" alt="Avatar de {{ post.author.pseudo }}">
+                                {{ post.author.pseudo }}
+                            </a>
+                        </div>
+                        <div class="mb-2">
+                            <div title="Je vois !" class="js-not-link d-inline mr-4">
+                                <img src="/img/icon/like.png" style="width:20px" alt="Je vois!">
+                                {{ post.sumLikes.likes }}
+                            </div>
+                            <div title="Je vois pas..." class="js-not-link d-inline">
+                                <img src="/img/icon/dislike.png" style="width:20px" alt="Je vois pas..." >
+                                {{post.sumLikes.dislikes}} 
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <p>
+                                {% if post.comments | length > 0 %}
+                                    {{ post.comments | length }} commentaires
+                                {% else %}
+                                    0 commentaire
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section> 
+
+    <section>
+        <h2>Les membres qui ont le plus de posts</h2>
+        <div class="row text-center">
+            {% for user in bestUsers %}
+            <div class="col my-4">
+                <img src="{{ user.avatar }}" alt="Avatar de {{ user.pseudo }}" class="avatar">
+                <h3><a target="_blank" href="{{ path("user_show", {"pseudo" : user.pseudo}) }}">{{ user.pseudo }}</a></h3>
+                <span class="badge badge-primary">{{ user.ads | length }} annonces</span>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+
+    $('.js-link').on('click', function(){
+        var url = $(this).data('target');
+        document.location.href = url;
+    });
+
+    $('.nav-item').removeClass('active');
+    $('.nav-item.accueil').addClass('active');
+
+    nav("{{ nav }}");
+    
+</script>
+    
+{% endblock %}

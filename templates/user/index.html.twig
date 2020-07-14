@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile : {{ user.pseudo }}{% endblock %}
+
+{% block body %}
+    <div class="row align-items-center">
+        <div class="col-3 text-center ">
+            <img src="{{ user.avatar }}" alt="Avatar de {{ user.pseudo }}" class="avatar mb-3">
+            <br>
+            <span class="badge badge-primary">{{ user.ads | length }} annonces</span>
+        </div>
+        <div class="col-9">
+            <h1>{{ user.pseudo }}</h1>
+            {% if user is same as (app.user) %}
+                <a href="{{ path('account_profile') }}" class="btn btn-outline-primary mr-2 mb-2">Modifier mes informations</a>
+                <a href="{{ path('account_password') }}" class="btn btn-outline-secondary mb-2 ">Modifier mon mot de passe</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <h2>Les images de {{ user.pseudo }}</h2>
+    {% if user.ads | length > 0 %}
+        <div class="card-deck">
+            {% for article in user.ads %}
+                {% include 'ad/_ad.html.twig' %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Pas encore d'image publiée</p>
+    {% endif %}
+
+{% endblock %}

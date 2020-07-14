@@ -1,0 +1,154 @@
+{% extends "base.html.twig" %}
+
+{% block title %} {{ article.id }} {% endblock %}
+
+{% block body %}
+    <div class="modal modal-report" id="modal-report" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Signaler</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <div class="form-group">
+                            <label for="cause">Exprimez-vous si vous le souhaitez.</label>
+                            <textarea class="form-control" id="cause" aria-describedby="infoCause"></textarea>
+                            <small id="infoCause" class="form-text text-muted">Ces informations ne serviront qu'à l'administration du site</small>
+                        </div>
+                    </form> 
+                </div>
+                <div class="modal-footer">
+                    <p>Valider le signalement ?</p> 
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">En fait nan...</button>
+                    <button id="link_flag" type="button" class="btn btn-primary">Voui voui</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {# récupére la valeur du vote (like ou dislake si l'user a déjà voté pour cette annonce #}
+    {% set break = false %}
+    {% set voteValue = "" %}
+    {% for vote in article.votes if not break %}
+        {% if vote.author  == app.user %}
+            {% set voteValue = vote.value %}
+            {% set break = true %}
+        {% endif %}
+    {% endfor %}
+    
+
+    {% set a = article.author %}
+    {% if article.reports | length > 2 %}
+        Cet article a été signalée plus de 10 fois. Il serra donc bientot supprimé.
+    {% else %}
+        <section>
+            <article class="ad-show row mx-auto mb-4">
+                <figure class="col-12">
+                    <img src="{{ article.image }}" class="img-fluid rounded mx-auto d-block" alt="">
+                </figure>
+            
+                <p class="col-12 col-md-6 mb-2">
+                    <a href="{{ path("user_show", {"pseudo" : a.pseudo})}}">
+                        <img src="{{ a.avatar }}" alt="" class="avatar avatar-mini">
+                        {{ a.pseudo }}
+                    </a> 
+                    le : {{ article.createdAt | date("d/m/Y")}}
+                </p>
+        
+                <div class="col-12 col-md-6 text-md-right" >
+                    {% include 'ad/_likes.html.twig' %}
+                </div>
+            </article>
+            <article class="mb-3">
+                <h1>{{ article.title }}</h1>
+                <p class="mb-2">{{ article.description | raw | nl2br }}</p>
+
+                <a href="{{ path("user_show", {"pseudo" : a.pseudo})}}" class="d-block">Voir les autres paréïdos de {{ a.pseudo }}</a>
+
+                {% if app.user == article.author %}
+                    {% if article.reports | length > 0 %}
+                        <p class="alert alert-danger">Votre post à été signalé {{ article.reports | length }} fois...</p>
+                    {% endif %}
+
+                    <a href="{{ path("ad_change", { "id" : article.id}) }}" class="btn btn-outline-secondary mt-4 mb-5">Modifier</a>
+                    <a href="{{ path("ads_delete", { "id" : article.id}) }}" class="btn btn-outline-danger mt-4 mb-5">Supprimer</a>
+
+                {% else %}
+                    <button type="button" class="btn {{ (report == false) ? 'btn-outline-danger' : 'btn-danger'}} report mt-4 mb-5" data-link='{{ path("report_add_ad", { "id" : article.id}) }}' data-toggle="modal" data-target="{{ (report == false) ? '#modal-report' : '' }}">Signaler</button>
+                {% endif %}
+            </article>
+        </section>
+        {% endif %}
+
+
+
+    <section class="alert alert-dismissible {{ app.user ? 'alert-secondary' : 'alert-info' }} mt-4">
+
+        <h5>Laissez un commentaire</h5>
+        {% if app.user %}
+            {{ form_start(formComment) }}
+            {{ form_widget(formComment.content) }}
+                <button class="btn btn-primary mt-3">Valider</button>
+            {{ form_end(formComment) }}
+        {% else %}
+            <p>Vous devez être connecté pour pouvoir ajouter un commentaire.</p>
+        {% endif %}
+    </section>
+
+    <section>
+        <h5>Les commentaires...</h5>
+        {% if comments | length >  0 %}
+            {% for comment in comments %}
+                
+                <div class="card mb-2" style="width:100%;height:auto;">
+                    <div class="row no-gutters">
+                        <div class="col-md-3 p-3" style="background-color:lightgray ;">
+                            <img class="avatar avatar-mini" src="{{ comment.author.avatar}}" alt="">
+                            <p>{{ comment.author.pseudo }}</p>
+                            <p class="card-text"><small class="text-muted"> Publié le : {{ comment.createdAt | date('d/m/y') }}</small></p>
+                        </div>
+                        <div class="col-md-9 p-4">
+                            {% if comment.reports | length > 2 %}
+                               <p class="m-auto alert alert-danger text-center">Ce commentaire a été signalé</p>
+                            {% else %}
+                                <p class="card-text">
+                                    {{ comment.content | raw | nl2br }}
+                                </p>
+                                {% if comment.author != app.user %}
+                                    {% set commentReportAuthor = false %}
+                                    {% if app.user %}
+                                        {% for report in comment.reports %}
+                                            {% if report.author == app.user %}
+                                                {% set commentReportAuthor = true %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    <button type="button" class="btn {{ (commentReportAuthor == false) ? 'btn-outline-danger' : 'btn-danger'}} report" data-link='{{ path("report_add_comment", { "id" : comment.id}) }}' data-toggle="modal" data-target="{{ (commentReportAuthor == false) ? '#modal-report' : '' }}">Signaler</button>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <small>Pas encore de commentaire.</small>
+        {% endif %}
+    </section>
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="/js/liked.js"></script>
+<script src="/js/report.js"></script>
+
+<script>
+
+    
+
+</script>
+{% endblock %}
+

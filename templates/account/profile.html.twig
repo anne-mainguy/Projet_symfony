@@ -1,0 +1,146 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Modification de profile{% endblock %}
+
+{% form_theme formChange _self %}
+
+{% block body %}
+    <h1 class="mb-4">Modifier les informations de mon profile : </h1>
+
+    <div class="pb-2 mb-2 text-center" id="avatar-change"> 
+        <img src="{{ image }}" class="avatar" id='avatarUser' alt="Avatar de {{app.user.pseudo}}">
+        <div id="task-bar" class="mb-2">
+            <i class="fas fa-pen"></i>
+            <i class="fas fa-trash-alt"></i>
+            <i class="fas fa-undo-alt"></i>
+        </div>
+    </div>
+    <div class="hidden text-center" id="errorAvatar">
+        <span class="badge badge-danger">Erreur</span>
+        <p class="text-danger d-inline">Aucun probleme</p>
+    </div>
+            
+     
+
+    {{ form_start(formChange) }}
+    {{ form_row(formChange.avatarFile) }}
+    {{ form_row(formChange.controlleAvatar) }}
+    {{ form_row(formChange.pseudo) }}
+    {{ form_row(formChange.email) }}
+    <button type="submit" class="btn btn-primary mt-3">Enregistrer les modifications</button>
+    <a href="{{ path("account_index")}}" class="btn btn-secondary mt-3">Annuler</a>
+    {{ form_end(formChange) }}
+
+{% endblock %}
+
+
+{% block _account_avatarFile_row %}
+    <div class="text-center mb-2">
+        {{ form_errors(form) }}
+    </div>
+
+    <div class="hidden">
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
+{% block _account_controlleAvatar_row %}
+    <div class="hidden">
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+<script>
+    //sert juste a savoir si il y a une modif (avatar par défaut, dernier avatar, new avatar)
+    let inputControlleAvatar = document.getElementById('account_controlleAvatar');
+
+
+    //gestion de l'affichage de l'aperçu de l'image avant upload
+    let imgUser = document.getElementById("avatarUser");
+    //quand on clique sur l'icon crayon ça simule le clique sur l'input file
+    let inputFile = document.getElementById('account_avatarFile');
+
+    let msgErrorAvatar = document.querySelector('#errorAvatar p');
+
+    //quand on sélectionne une image, elle s'affichera a la place de l'avatar
+    inputFile.addEventListener('change', function(){
+        let reader = new FileReader();
+        let file = this.files[0];
+
+        validFile = checkFile(file);
+
+        if(validFile == true ){
+            reader.addEventListener('load', function() {
+                showImage(this.result , 'new avatar');
+                
+            });
+            reader.readAsDataURL(file);
+        }
+        else{
+            console.log(validFile);
+            msgErrorAvatar.textContent = validFile;
+            msgErrorAvatar.parentElement.classList.remove('hidden');
+        }
+
+    });
+
+
+    //gestion des icons de suppression ou modification de l'image
+    document.querySelectorAll('i').forEach(function(icon){
+        icon.addEventListener('click', managementIcons);
+    });
+
+    
+
+    function managementIcons(){
+       if(!msgErrorAvatar.parentElement.classList.contains('hidden')){
+
+           msgErrorAvatar.parentElement.classList.add('hidden');
+       }
+       //si le user veut supprimer, on affiche l'image par defaut et je mets son url dans l'input file
+       if(this.classList.contains('fa-trash-alt')){
+           showImage("/img/avatar/avatar-icon2.png", '/img/avatar/avatar-icon2.png');
+           inputFile.value = "";
+
+       }
+       //si le user veut modifier, on 'click' sur l'input file pour récupérer l'image qu'il va sélectionner puis on l'affiche (fonction déja faite)
+       else if(this.classList.contains('fa-pen')){
+           inputFile.click();
+       }
+       //si le user veut faire un reset (revenir a l'état initial)
+       else if(this.classList.contains('fa-undo-alt')){
+            resetAvatar();
+       }
+   }
+
+
+    function showImage(bgAvatar, inputFileValue){
+        imgUser.setAttribute("src", bgAvatar );
+        inputControlleAvatar.value = inputFileValue;
+    } 
+
+    function checkFile(file){
+       //.size en octets
+       fileSize = Math.ceil(file.size / 1024);
+       if(fileSize < 0 || fileSize > 1024 ){
+            resetAvatar();
+           return "L'image est trop lourde";
+        }
+        if(file.type != ('image/jpeg'||'image/png')){
+            resetAvatar();
+            return 'Fichier jpg, jpeg et png uniquement.';
+        }
+       
+       return true
+   }
+
+    function resetAvatar(){
+        imgUser.setAttribute("src", "{{ image }}");
+        inputControlleAvatar.value = "{{ image }}";
+        inputFile.value = "";
+    }
+   
+</script>
+{% endblock %}

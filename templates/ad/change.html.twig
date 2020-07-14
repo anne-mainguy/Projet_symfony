@@ -1,0 +1,21 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Modification d'annonce{% endblock %}
+
+{% block body %}
+
+<h1>Modification d'annonce</h1>
+
+<figure class="col-6 m-auto">
+    <img src="{{ ad.image }}" class="img-fluid rounded mx-auto d-block" alt="">
+</figure>
+
+{{ form_start(formChange) }}
+
+{{ form_widget(formChange) }}
+
+<button class="btn btn-outline-secondary">Valider</button>
+
+{{ form_end(formChange) }}
+
+{% endblock %}

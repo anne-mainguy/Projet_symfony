@@ -1,0 +1,89 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %} Liste des commentaires{% endblock %}
+
+{% block body %}
+
+<h1 class="mb-3">Liste des commentaires</h1>
+<div>
+    <table class="table table-hover" data-tri={{ tri }}>
+        <thead>
+            <tr>
+                <th scope="col">
+                    <a class="arrow-up" href=""><i class="fas fa-arrow-up"></i></a>
+                    <a class="arrow-down" href=""><i class="fas fa-arrow-down"></i></a>
+                </th>
+                <th scopr="col">
+                    <a id="report" href="{{ path('admin_comment_index', {'tri' : 'report', 'order' : '2'}) }}">
+                        Signalé
+                    </a>
+                </th>
+                <th scope="col" colspan="2">
+                    <a id="author" href="{{ path('admin_comment_index', {'tri' : 'author', 'order' : '1'}) }}">
+                        Auteur
+                    </a>
+                </th>
+                <th scope="col">
+                    <a id="date" href="{{ path('admin_comment_index', {'tri' : 'date', 'order' : '1'}) }}">
+                        Date
+                    </a>
+                </th>
+                <th scope="col">
+                    <a id="post" href="{{ path('admin_comment_index', {'tri' : 'post', 'order' : '2'}) }}">
+                        Post
+                    </a>
+                </th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comment in comments %}
+            
+            <tr>
+                <td scope="row">
+                    {{ comment.id }}
+                </td>
+                <td>
+                    {% if comment.reports | length > 0 %}
+                        <a href="{{ path('admin_details_report', {'id' : comment.id, 'type' : 'commentaire'}) }}">
+                            <i class="fas fa-exclamation fa-lg text-danger"></i> ( {{ comment.reports | length }} )
+                        </a>
+                    {% endif %}
+                </td>
+                <td scope="row" class="text-right pr-1">
+                    <a target="_blank" href="{{ path('user_show', {'pseudo': comment.author.pseudo}) }}" >
+                        <img src="{{ comment.author.avatar }}" class="avatat avatar-mini" alt="">
+                    </a>
+                </td>
+                <td scope="row" class="text-left pl-0">
+                    <a target="_blank" href="{{ path('user_show', {'pseudo': comment.author.pseudo}) }}" >
+                        {{ comment.author.pseudo }}
+                    </a>
+                </td>
+                <td>
+                    {{ comment.createdAt | date('d/m/Y') }}
+                </td>
+                <td>
+                    <a target="_blank" href="{{ path("show_ad", {'id' : comment.ad.id }) }}">
+                        <img src="{{ comment.ad.image }}" class="ad rounded mx-auto d-block" alt="">
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path("admin_comment_show", { 'id' : comment.id}) }}"><i class="fas fa-eye"></i></a>
+                    <a href="{{ path("admin_comment_delete", {'id' : comment.id , 'tri' : tri , 'order' : order}) }}" class="btn text-danger"><i class="fas fa-trash-alt fa-lg"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="/js/order.js"></script>
+<script src="/js/tri.js"></script>
+<script>
+    nav("{{ nav }}");
+</script>
+{% endblock %}

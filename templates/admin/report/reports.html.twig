@@ -1,0 +1,43 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+<h1 class="mb-3">Les signalements</h1>
+
+<h2>Signalements pour  le {{ genre }} de {{ target.author.pseudo }}</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Utilisateur</th>
+            <th scope="col">date</th>
+            <th scope="col">Raison</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for report in data %}
+        {% set user = report.author %}
+        <tr>
+            <td>{{report.id}}</td>
+            <td>
+                <a target="_blank" href="{{ path('user_show', {'pseudo' : user.pseudo}) }}">
+                    <img src="{{ user.avatar }}" class="avatar avatar-mini" alt="">
+                    {{ user.pseudo }}
+                </a>
+            </td>
+            <td>
+                {{ report.createdAt | date('d/m/Y')}}
+            </td>
+            <td>
+                {{ report.cause | raw | nl2br}}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+
+
+{% endblock %}

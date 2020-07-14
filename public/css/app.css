@@ -1,0 +1,172 @@
+h2 {
+    margin : 30px auto;
+}
+
+article.ad-show {
+    max-width: 640px;
+}
+
+.ad-show img {
+    max-height: 640px;
+}
+
+article {
+    margin : 20px;
+}
+
+.illustration-min {
+    max-width: 150px;
+    max-height: 150px;
+    margin-bottom : 20px;
+}
+
+.illustration-min.float-left{
+    margin-right : 20px;
+}
+.illustration-min.float-right{
+    margin-left : 20px;
+}
+
+/*affichage des articles*/
+
+div.ad.card{
+    height : 345px;
+}
+
+div.card-img-top{
+    width : 100%;
+    min-height : 200px;
+    background : no-repeat center;
+    background-size : cover;
+}
+
+
+div.card-body.ad{
+    height : 200px;
+    overflow: hidden;
+}
+
+
+@media screen and (max-width: 780px){
+    div.card.ad{
+        height : 250px;
+    }
+
+    div.card.ad div.card-body{
+        display : none;
+    }
+}
+
+.avatar {
+    width : 128px;
+    height: 128px;
+
+    border-radius: 50%;
+    object-fit: cover;
+
+    /* background-color : #593196 #ac98cb; */
+}
+/* 
+#avatar-change .avatar{
+    margin : auto;
+} */
+
+/* figure.avatar {
+    overflow: hidden;
+} */
+
+/* .avatar img {
+    max-width : 100%;
+} */
+
+.avatar-medium {
+    max-width: 64px;
+    max-height: 64px;
+}
+
+.avatar-mini {
+    /* max-width : 25px;
+    max-height : 25px; */
+    width : 25px;
+    height : 25px;
+}
+
+div#avatar-change {
+    width : 150px;
+    margin : 0 auto 20px;
+}
+
+/* div.avatar{
+    display: inline-block;
+    margin-left : auto;
+    margin-right : auto;
+    width : 128px;
+    height : 128px;
+
+    border-radius : 50%;
+
+    background : no-repeat center;
+    background-size : cover;
+} */
+
+
+/* div.avatar-change {
+    position : relative;
+}
+
+div.avatar-change i {
+    position : absolute;
+    bottom : -30px;
+
+    font-size : 20px;
+    color : #A991D4;
+}
+
+
+div.avatar-change i.fa-pen {
+    left : 0;
+}
+
+div.avatar-change i.fa-trash-alt {
+    left : 50%;
+    transform: translateX(-50%);
+}
+
+div.avatar-change i.fa-undo-alt {
+    right : 0;
+}
+
+div.avatar-change i:hover {
+    color : #593196 
+} */
+
+div#task-bar {
+    display : flex;
+    justify-content: space-between;
+    padding : 1rem 0;
+
+    font-size : 1.5rem;
+    color : #A991D4;
+}
+
+/* div#task-bar i{
+    display : block;
+} */
+
+div#task-bar i:hover{
+    color : #593196 ;
+}
+
+
+img.bestPostsLiked {
+    height : 200px;
+    object-fit: cover;
+}
+
+/*======= CLASS ========*/
+
+.hidden {
+    visibility: hidden;
+    width : 0;
+    height : 0;
+}

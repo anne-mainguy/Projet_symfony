@@ -1,0 +1,18 @@
+
+<div class="col-12 col-sm-6 col-lg-4 my-4">
+    <div class="card ad">
+        <a href="{{ path("show_ad", {"id" : article.id}) }}">
+            <img src="{{ article.image }}" class="card-img-top bestPostsLiked" alt="...">
+        </a>
+        <div class="card-body ad">
+            <h5 class="card-title">{{ article.title }}</h5>
+            {% if article.description != null %}
+            <p class="card-text">{{ article.description | slice(0, 20) }}...</p>
+            {% endif %}
+        </div>
+        <div class="card-footer text-right">
+            {% include 'ad/_likes.html.twig' %}
+        </div>
+    </div>
+</div>
+        

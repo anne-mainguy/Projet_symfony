@@ -1,0 +1,154 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %} Posts{% endblock %}
+
+{% block body %}
+<h1 class="mb-3">Administration des Posts</h1>
+<div>
+    <table class="table table-hover" data-tri="{{ tri }}">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <a class="arrow-up {{ (order == 1) ? 'text-muted'}}" href=""><i class="fas fa-arrow-up"></i></a>
+                    <a class="arrow-down {{ (order == 2) ? 'text-muted'}}" href=""><i class="fas fa-arrow-down"></i></a>
+                </th>
+                <th scopr="col" >
+                    <a id="report" class="p-2" href="{{ path('admin_ads_index', {'tri' : 'report', 'order' : '2'}) }}">
+                        Signalé
+                    </a>
+                </th>
+                <th scope="col">
+                    Image
+                </th>
+                <th scope="col" >
+                    <a id="author" href="{{ path('admin_ads_index', {'tri' : 'author', 'order' : '1'}) }}">
+                        Auteur
+                    </a>
+                </th>
+                <th scope="col" >
+                    <a id="theme" href="{{ path('admin_ads_index', {'tri' : 'theme', 'order' : '1' , 'themeName' : 'tous'}) }}">
+                        Theme
+                    </a>
+                    <div class="nav-item dropdown d-inline-block">
+                        <a class="nav-link dropdown-toggle pl-2" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"></a>
+                        <div class="dropdown-menu">
+                            {% for theme in themes %}
+                                <a href="{{ path('admin_ads_index', {'tri' : 'theme', 'order' : '2', 'themeName' : theme.theme }) }}" class="dropdown-item">{{ theme.theme }}</a>
+                            {% endfor %}
+                            
+                        </div>
+                    </div>
+                </th>
+                <th scope="col" >
+                    <a id="date" href="{{ path('admin_ads_index', {'tri' : 'date', 'order' : '1'}) }}">
+                        Date
+                    </a>
+                </th>
+                <th scopr="col" >
+                    <a id="comments" href="{{ path('admin_ads_index', {'tri' : 'comments', 'order' : '2'}) }}">
+                        Commentaires
+                    </a>
+                </th>
+                <th scope="col" colspan="2">
+                    <a id="likes" href="{{ path('admin_ads_index', {'tri' : 'likes', 'order' : '2'}) }}">
+                        Likes
+                    </a>
+                    /
+                    <a id="dislikes" href="{{ path('admin_ads_index', {'tri' : 'dislikes', 'order' : '2'}) }}">
+                        Dislikes
+                    </a>
+                </th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <td scope="row">
+                    {{ post.id }}
+                </td>
+                <td>
+                    {% if post.reports | length > 0 %}
+                        <a href="{{ path('admin_details_report', {'id' : post.id, 'type' : 'post'}) }}">
+                            <i class="fas fa-exclamation fa-lg text-danger"></i> ({{ post.reports | length }})
+                        </a>
+                    {% endif %}
+                </td>
+                <td>
+                    <a target="_blank" href="{{ path('show_ad', {'id': post.id}) }}">
+                        <img src="{{ post.image }}" class="ad rounded mx-auto d-block" alt="">
+                    </a>
+                </td>
+                <td>
+                    <a target="_blank" href="{{ path('user_show', {'pseudo' : post.author.pseudo}) }}">
+                        {{ post.author.pseudo }}
+                    </a>
+                </td>
+                <td>
+                    {{ post.theme.theme }}
+                </td>
+                <td>
+                    {{ post.createdAt | date('d/m/Y') }}
+                </td>
+                <td>
+                    {{ post.countComments }}
+                </td>
+                <td class="table-success">
+                    {{ post.sumLikes.likes }}
+                </td>
+                <td class="table-danger">
+                    {{ post.sumLikes.dislikes }}
+                </td>
+                <td>
+                    <a target="_blank" href="{{ path('admin_ad_change', { 'id' : post.id }) }}" class="btn text-primary"><i class="fas fa-pen fa-lg"></i></a>
+                    <button class="delete btn text-danger" data-href="{{ path("admin_ads_delete", {'id' : post.id, 'order' : order}) }}"><i class="fas fa-trash-alt fa-lg"></i></button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Etes-vous sur de vouloir supprimer cette ligne ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">En fait non...</button>
+          <a href="" class="btn btn-primary">Oui oui !</a>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="/js/order.js"></script>
+<script src="/js/tri.js"></script>
+<script>
+    nav("{{ nav }}");
+
+    $('.delete').on('click', function(){
+        let url = $(this).attr('data-href');
+        console.log(url);
+        $('#exampleModal').modal('show');
+        $('.modal-footer a').attr('href', url);
+    });
+
+
+
+    
+
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Création d'un post{% endblock %}
+
+{% block body %}
+
+{% form_theme formNew _self %}
+
+<h1>Création d'un nouveau post.</h1>
+{{ form_start(formNew) }}
+{{ form_widget(formNew) }}
+<button type="submit" class="btn btn-outline-secondary">Valider</button>
+{{ form_end(formNew) }}
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $('.custom-file-label').attr('data-browse', 'Parcourir...');
+
+    //pour que le lien vers le fichier s'affiche quand il est selectionné
+    $('#annonce_image').on('change',function(){
+        var fileName = $(this).val();
+        $(this).next('.custom-file-label').html(fileName);
+    })
+
+</script>
+
+{% endblock %}

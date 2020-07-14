@@ -1,0 +1,50 @@
+
+  
+  <!-- Modal -->
+<div class="modal fade" id="modalConnectLike" tabindex="-1" role="dialog" aria-labelledby="connectForLike" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% if  article.author == app.user %}
+          <div class="modal-bidy text-center mb-5">
+            <h5>Vous ne pouvez pas voter pour votre propre post...</h5>
+          </div>
+        {% else %}
+        <div class="modal-body text-center" id="exampleModalLabel">
+            <h5>Vous devez être connectés pour pouvoir liker...</h5>
+        </div>
+        <div class="modal-footer justify-content-center">
+            <a href="{{ path("account_register") }}" class="btn btn-outline-primary">Inscription</a>
+            <a href="{{ path("account_login") }}" class="btn btn-outline-secondary">Connexion</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+</div>
+
+
+
+{% if app.user and app.user != article.author %}
+{% set voteValue = article.isLikeByUser(app.user) %}
+    <a href="{{ path('liked_ad', {'id' : article.id , 'value' : 1 }) }}" class="js-like mr-4" title="Je vois !">
+        <img src="/img/icon/{{ (voteValue == 1 ) ? 'likeActive.png' : 'like.png'}}" class="js-img-like" style="width:20px" alt="Je vois!">
+        <span class="js-likes">{{ article.sumLikes.likes }}</span>
+    </a>
+    <a href="{{ path('liked_ad', {'id' : article.id , 'value' : 2 }) }}"class="js-like" title="Je vois pas...">
+        <img src="/img/icon/{{ (voteValue == 2) ? 'dislikeActive.png' : 'dislike.png' }}" class="js-img-dislike" style="width:20px" alt="Je vois pas..." >
+        <span class="js-dislikes">{{ article.sumLikes.dislikes}}</span>
+    </a>
+{% else %}    
+    <div data-toggle="modal" data-target="#modalConnectLike" title="Je vois !" class=" d-inline mr-4">
+        <img src="/img/icon/like.png" style="width:20px" alt="Je vois!">
+        {{ article.sumLikes.likes }}
+    </div>
+    <div data-toggle="modal" data-target="#modalConnectLike" title="Je vois pas..." class=" d-inline">
+        <img src="/img/icon/dislike.png" style="width:20px" alt="Je vois pas..." >
+        {{ article.sumLikes.dislikes}} 
+    </div>
+{% endif %}

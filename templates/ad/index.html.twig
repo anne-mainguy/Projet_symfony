@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vos paréidos{% endblock %}
+
+{% block body %}
+
+    <section>
+        <h1>Vos paréidos</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi, maxime hic nisi at magnam inventore, temporibus tempora facere, natus quaerat repellat. Praesentium dolorem hic nisi inventore quis dolorum provident ipsum?Cumque, nam deleniti! Inventore molestiae provident sint quam, ullam incidunt consectetur. Cumque voluptas, omnis in numquam nobis quas odio explicabo accusamus nesciunt neque nam. Fugit architecto doloremque molestias odio modi.</p>
+    </section>
+
+    <section>
+        <h2>
+            {% if articles | length == 0 and name_theme != "" and name_valide == true %}
+                Aucune images trouvées pour ce theme
+            {% elseif name_theme != "" and name_valide == false %}
+                Ce theme n'existe pas...
+            {% elseif articles is not null and name_theme == 'tous' %}
+                Toutes les images
+            {% elseif articles is not null and name_theme != null %}
+                Les images sur le theme "{{ name_theme }}"
+            {% endif %}
+        </h2>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ path("articles", {'name_theme' : name_theme , 'order' : 'croissant'}) }}"><i class="fas fa-arrow-down"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ path("articles", {'name_theme' : name_theme }) }}"><i class="fas fa-arrow-up"></i></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Par note</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" role="button" aria-expanded="false" aria-haspopup="true" href="#" data-toggle="dropdown">Themes</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ path("articles", {'name_theme' : "tous"}) }}">Tous</a>
+                    {% for theme in themes %}
+                        <a class="dropdown-item" href="{{ path("articles", {'name_theme' : theme.theme}) }}">{{ theme.theme }}</a>
+                    {% endfor %}
+                </div>
+            </li>
+        </ul>
+
+        <article>
+                <div class="card-deck">
+                    {% for article in articles %}
+                        {% if article.reports | length < 3 %}
+                            {% include 'ad/_ad.html.twig' %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </article>
+
+
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="/js/liked.js"></script>
+<script>
+    nav("{{ nav }}");
+</script>
+{% endblock %}

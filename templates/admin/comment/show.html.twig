@@ -1,0 +1,28 @@
+{% extends "admin/base.html.twig" %}
+
+{% block title %}
+    commentaire de {{ comment.author.pseudo }}
+{% endblock %}
+
+{% block body %}
+    <h1>THE commentaire</h1>
+
+    <div class="card mb-2" style="width:100%;height:auto;">
+        <div class="row no-gutters">
+            <div class="col-md-3 p-3" style="background-color:lightgray ;">
+                <img class="avatar avatar-mini" src="{{ comment.author.avatar}}" alt="">
+                <p>{{ comment.author.pseudo }}</p>
+                <p class="card-text"><small class="text-muted"> Publié le : {{ comment.createdAt | date('d/m/y') }}</small></p>
+            </div>
+            <div class="col-md-9 p-4">
+                <p class="card-text">{{ comment.content | raw | nl2br }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    nav("{{ nav }}");
+</script>
+{% endblock %}

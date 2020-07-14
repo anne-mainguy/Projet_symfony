@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-secondary mb-5">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" aria-expanded="false" aria-controls="navbarColor02" aria-label="Toggle navigation" type="button" data-target="#navbarColor02" data-toggle="collapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarColor02">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item accueil active">
+                <a class="nav-link" href="{{ path('admin_dashboard') }}">Accueil<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item membres">
+                <a class="nav-link" href="{{ path('admin_user_index', {'tri': 'id'}) }}">Membres</a>
+            </li>
+            <li class="nav-item posts">
+                <a class="nav-link" href="{{ path('admin_ads_index', {'tri' : 'id'}) }}">Posts</a>
+            </li>
+            <li class="nav-item commentaires">
+                <a class="nav-link" href="{{ path('admin_comment_index', {'tri' : 'id'}) }}">Commentaires</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('homepage') }}">Retour au site</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a href="{{ path("admin_account_logout") }}" class="nav-link">Déconnexion</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+    
+{% for label, messages in app.flashes %}
+<div class="container">
+    <div class="alert alert-{{ label }}">
+        {% for message in messages %}
+            <p>{{ message | raw }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+

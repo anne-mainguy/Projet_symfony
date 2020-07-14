@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-5">
+<!-- NOTE mettre logo -->
+    <a class="navbar-brand" href="#">ICON</a>
+    <button class="navbar-toggler" aria-expanded="false" aria-controls="navbarColor01" aria-label="Toggle navigation" type="button" data-target="#navbarColor01" data-toggle="collapse">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item accueil active">
+            <a class="nav-link" href="{{ path("homepage") }}">Accueil <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item posts">
+            <a class="nav-link" href=" {{ path("articles", {'name_theme' : "tous"})}}">Vos paréidos </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            {% if app.user %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ app.user.avatar}}" class="avatar avatar-mini" alt="Votre avatar" id="menuAccountLink">
+                        {{ app.user.pseudo }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" area-labelledby="menuAccountLink">
+                        <a class="dropdown-item" href="{{ path('account_index') }}">Mon profile</a>
+                        <a class="dropdown-item" href="{{ path("account_profile")}}">Modifier mon profil</a>
+                        <a class="dropdown-item" href="{{ path("account_password") }}">Modifier mon mot de passe</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ path("ad_create") }}">Nouveau post</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ path("account_logout") }}">Déconnexion</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a href="{{ path("account_login") }}" class="nav-link">Connexion</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path("account_register") }}" class="nav-link">Inscription</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+{% for label, messages in app.flashes %}
+<div class="container">
+    <div class="alert alert-{{ label }}">
+        {% for message in messages %}
+            <p>{{ message | raw }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
